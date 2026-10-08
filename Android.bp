@@ -34,6 +34,7 @@ cc_library {
     double_loadable: true,
     srcs: select((soong_config_variable("libion", "dmaheap_impl"),
                   soong_config_variable("libion", "legacy_impl")), {
+        (true, true): ["ion_dmaheap.c"],
         (true, default): ["ion_dmaheap.c"],
         (default, true): ["ion_legacy.c"],
         (default, default): ["ion.c"],
@@ -42,6 +43,7 @@ cc_library {
     export_header_lib_headers: ["libion_headers"],
     shared_libs: select((soong_config_variable("libion", "dmaheap_impl"),
                          soong_config_variable("libion", "legacy_impl")), {
+        (true, true): ["liblog"],
         (true, default): ["liblog"],
         (default, true): ["liblog"],
         (default, default): [],
