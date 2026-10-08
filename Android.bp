@@ -32,21 +32,19 @@ cc_library {
     name: "libion",
     defaults: ["libion_defaults"],
     double_loadable: true,
-    srcs: select(soong_config_variable("libion", "dmaheap_impl"), {
-        true: ["ion_dmaheap.c"],
-        default: select(soong_config_variable("libion", "legacy_impl"), {
-            true: ["ion_legacy.c"],
-            default: ["ion.c"],
-        }),
+    srcs: select((soong_config_variable("libion", "dmaheap_impl"),
+                  soong_config_variable("libion", "legacy_impl")), {
+        (true, default): ["ion_dmaheap.c"],
+        (default, true): ["ion_legacy.c"],
+        (default, default): ["ion.c"],
     }),
     header_libs: ["libion_headers"],
     export_header_lib_headers: ["libion_headers"],
-    shared_libs: select(soong_config_variable("libion", "dmaheap_impl"), {
-        true: ["liblog"],
-        default: select(soong_config_variable("libion", "legacy_impl"), {
-            true: ["liblog"],
-            default: [],
-        }),
+    shared_libs: select((soong_config_variable("libion", "dmaheap_impl"),
+                         soong_config_variable("libion", "legacy_impl")), {
+        (true, default): ["liblog"],
+        (default, true): ["liblog"],
+        (default, default): [],
     }),
     cflags: ["-Werror"],
 }
